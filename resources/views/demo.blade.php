@@ -52,61 +52,70 @@
 {{--</nav>--}}
 @extends('navbar')
 @section('content')
-    <div class="container">
-        <div class="result-container">
-            <div class="result-grid" id="result-grid">
+    <body class="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+    <div class="container mx-auto p-4">
+        <div class="result-container bg-white dark:bg-gray-900 shadow rounded-lg p-4">
+            <div class="result-grid grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Movie information here -->
                 <div class="movie-poster">
-                    <img src="https://www.themoviedb.org/t/p/w220_and_h330_face{{ $data['poster_path'] }}" alt="Movie Poster">
+                    <img class="w-full h-auto rounded-lg"
+                         src="https://www.themoviedb.org/t/p/w220_and_h330_face{{ $data['poster_path'] }}"
+                         alt="Movie Poster">
                 </div>
-                <div class="movie-info">
-                    <h3 class="movie-title">{{ $data['title'] }} ({{ date('Y', strtotime($data['release_date'])) }})</h3>
-                    <ul class="movie-misc-info">
+                <div class="movie-info col-span-2">
+                    <h3 class="movie-title text-2xl font-bold">{{ $data['title'] }}
+                        ({{ date('Y', strtotime($data['release_date'])) }})</h3>
+                    <ul class="movie-misc-info list-none p-0 mt-2 mb-4">
                         <li class="year">Year: {{ $data['release_date'] }}</li>
-                        <li class="rated" style="background-color:
-                        @if($data['vote_average'] >= 7)
-                            green
-                        @elseif($data['vote_average'] >= 5)
-                            orange
-                        @else
-                            red
-                        @endif">
-                            Rating: {{ $data['vote_average'] }}
-                        </li>
                     </ul>
-                    <div class="flex flex-wrap mb-2">
-                        <span class="text-gray-500 mr-2">Genres:</span>
+                    <div class="flex flex-wrap mb-4">
+                        <span class="text-gray-500 mr-2">Rating:</span>
+                        <span
+                            class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 py-1 px-2 rounded-full text-sm">{{ $data['vote_average'] }}</span>
+                        <span class="text-gray-500 ml-4 mr-2">Runtime:</span>
+                        <span
+                            class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 py-1 px-2 rounded-full text-sm">{{ $data['runtime'] }} mins</span>
+                        <span class="text-gray-500 ml-4 mr-2">Genres:</span>
                         @foreach($data['genres'] as $genre)
-                            <span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 py-1 px-2 rounded-full text-sm mr-2">{{ $genre['name'] }}</span>
+                            <span
+                                class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 py-1 px-2 rounded-full text-sm mr-2">{{ $genre['name'] }}</span>
                         @endforeach
                     </div>
                     <p class="plot"><b>Plot:</b> {{ $data['overview'] }}</p>
-                    <!-- Other movie details can be added here -->
                 </div>
             </div>
         </div>
+
+        <div class="mt-4">
+            <form method="POST" action="{{ route('movies.save') }}">
+                @csrf
+                <input type="hidden" name="movie_id" value="{{ $data['id'] }}">
+                <button type="submit" class="btn-save bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+                    Сохранить
+                </button>
+            </form>
+        </div>
+        <div class="mt-4">
+            <a href="{{ url()->current() }}" class="btn-next bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600">Далее</a>
+        </div>
+        <div class="mt-4">
+            <a href="http://127.0.0.1:8000/movies/"
+               class="btn-exit bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600">Выйти</a>
+        </div>
     </div>
 
-    <div class="container mt-3">
-        <form method="POST" action="{{ route('movies.save') }}">
-            @csrf
-            <input type="hidden" name="movie_id" value="{{ $data['id'] }}">
-            <button type="submit" class="btn btn-primary">Сохранить</button>
-        </form>
-    </div>
+    <script type="module">
+        import {createApp} from 'vue';
+        import App from './App.vue';
 
-    <!-- Button to go to next -->
-    <div class="container mt-3">
-        <a href="{{ url()->current() }}" class="btn btn-success">Далее</a>
-    </div>
-    <div class="container mt-3">
-        <a href="http://127.0.0.1:8000/movies/" class="btn btn-success">Выйти</a>
-    </div>
+        createApp(App).mount('#app');
+    </script>
+    </body>
 
 
 
     <!-- end of result container -->
 
-{{--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>--}}
+    {{--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>--}}
 @endsection
 {{--@endsection--}}
