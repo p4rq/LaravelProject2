@@ -105,7 +105,6 @@
     </div>
 
     <script type="module">
-        import {createApp} from 'vue';
 
     </script>
     </body>
